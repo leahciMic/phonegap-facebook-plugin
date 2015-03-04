@@ -156,15 +156,18 @@ if (cordova.platformId == "browser") {
             });
         }
     };
-    
+
     // Bake in the JS SDK
     (function () {
         if (!window.FB) {
             // can't assume DOM is ready
             document.addEventListener('DOMContentLoaded', function() {
                 console.log("launching FB SDK");
-                var e = document.createElement('script');
-                e.src = document.location.protocol + '//connect.facebook.net/en_US/sdk.js';
+                var protocol = document.location.protocol,
+                    e = document.createElement('script');
+
+                // use https if currently on file protocol
+                e.src = (protocol == 'file:' ? 'https:' : protocol) + '//connect.facebook.net/en_US/sdk.js';
                 e.async = true;
                 document.getElementById('fb-root').appendChild(e);
 
