@@ -160,17 +160,21 @@ if (cordova.platformId == "browser") {
     // Bake in the JS SDK
     (function () {
         if (!window.FB) {
-            console.log("launching FB SDK");
-            var e = document.createElement('script');
-            e.src = document.location.protocol + '//connect.facebook.net/en_US/sdk.js';
-            e.async = true;
-            document.getElementById('fb-root').appendChild(e);
-            if (!window.FB) {
-                // Probably not on server, use the sample sdk
-                e.src = 'phonegap/plugin/facebookConnectPlugin/fbsdk.js';
+            // can't assume DOM is ready
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log("launching FB SDK");
+                var e = document.createElement('script');
+                e.src = document.location.protocol + '//connect.facebook.net/en_US/sdk.js';
+                e.async = true;
                 document.getElementById('fb-root').appendChild(e);
-                console.log("Attempt local load: ", e);
-            }
+
+                if (!window.FB) {
+                    // Probably not on server, use the sample sdk
+                    e.src = 'phonegap/plugin/facebookConnectPlugin/fbsdk.js';
+                    document.getElementById('fb-root').appendChild(e);
+                    console.log("Attempt local load: ", e);
+                }
+            });
         }
     }());
 
